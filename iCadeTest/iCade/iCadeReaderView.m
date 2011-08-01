@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2011 by Stuart Carnie
+ Copyright (C) 2011 by Maximilian 'McZonk' Christ
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +28,7 @@ static const char *OFF_STATES = "eczqtrfnmpgv";
 
 @interface iCadeReaderView()
 
-- (void)didEnterBackground;
+- (void)willResignActive;
 - (void)didBecomeActive;
 
 @end
@@ -38,21 +39,25 @@ static const char *OFF_STATES = "eczqtrfnmpgv";
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
-    inputView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+	if(self != nil) {
+		inputView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
-    
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willResignActive) name:UIApplicationWillResignActiveNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
+	}
     return self;
 }
 
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
+	
+	[inputView release];
+	
     [super dealloc];
 }
 
-- (void)didEnterBackground {
+- (void)willResignActive {
     if (self.active)
         [self resignFirstResponder];
 }

@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2011 by Stuart Carnie
+ Copyright (C) 2011 by Maximilian 'McZonk' Christ
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
